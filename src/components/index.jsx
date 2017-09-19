@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+const nil = () => false;
+
 /*
  * Parabola 组件参数说明：
  * - start 起始点坐标/宽高
@@ -20,6 +22,10 @@ export default class Parabola extends Component {
     duration: 800,
     top: 0,
     delay: 0,
+    children: null,
+    onEnd: nil,
+    onBeforeStart: nil,
+    onAfterEnd: nil,
   }
 
   static propTypes = {
@@ -39,6 +45,26 @@ export default class Parabola extends Component {
     duration: PropTypes.number,
     top: PropTypes.number,
     delay: PropTypes.number,
+    children: PropTypes.element,
+    onEnd: PropTypes.func,
+    onBeforeStart: PropTypes.func,
+    onAfterEnd: PropTypes.func,
+
+  }
+
+  /*
+   * 根据极值点和另外一点计算抛物线参数
+   * 抛物线顶点式方程：y=a(x-h)^2+k，其中 (h, k) 为 极值点坐标
+   */
+  static calculate(extreme, point) {
+    const { x: ex, y: ey } = extreme;
+    const { x, y } = point;
+
+    const a = (y - ey) / ((x - ex) ** 2);
+    const h = ex;
+    const k = ey;
+
+    return { a, h, k };
   }
 
   constructor(props) {
@@ -90,21 +116,6 @@ export default class Parabola extends Component {
   }
 
   /*
-   * 根据极值点和另外一点计算抛物线参数
-   * 抛物线顶点式方程：y=a(x-h)^2+k，其中 (h, k) 为 极值点坐标
-   */
-  calculate(extreme, point) {
-    const { x: ex, y: ey } = extreme;
-    const { x, y } = point;
-
-    const a = (y - ey) / Math.pow((x - ex), 2);
-    const h = ex;
-    const k = ey;
-
-    return { a, h, k };
-  }
-
-  /*
    * 坐标系统转换，将全局坐标系转换为相对坐标系
    */
   initParabolas() {
@@ -122,15 +133,15 @@ export default class Parabola extends Component {
       y: Math.min(right.y, left.y) - top,
     };
 
-    const lParabola = this.calculate(extreme, left);   // 极值点左侧抛物线参数
-    const rParabola = this.calculate(extreme, right);  // 极值点右侧抛物线参数
+    const lParabola = Parabola.calculate(extreme, left);   // 极值点左侧抛物线参数
+    const rParabola = Parabola.calculate(extreme, right);  // 极值点右侧抛物线参数
 
     this.parabolas = { lParabola, rParabola };
     return this.parabolas;
   }
 
   update() {
-    let { duration, rate, start, end } = this.props;
+    const { duration, rate, start, end } = this.props;
     let { animationEnd } = this.state;
     let interval = Date.now() - this.startTime;
 
@@ -149,11 +160,11 @@ export default class Parabola extends Component {
 
     // 计算位置
     const x = percent * (end.x - start.x);
-    const y = a * Math.pow(x - h, 2) + k;
+    const y = (a * ((x - h) ** 2)) + k;
 
     // 计算缩放
-    const scaleX = 1 - percent * (1 - ((end.width || 1) / (start.width || 1)));
-    const scaleY = 1 - percent * (1 - ((end.height || 1) / (start.height || 1)));
+    const scaleX = 1 - (percent * (1 - ((end.width || 1) / (start.width || 1))));
+    const scaleY = 1 - (percent * (1 - ((end.height || 1) / (start.height || 1))));
 
     this.setState({
       translateX: x,
@@ -165,6 +176,8 @@ export default class Parabola extends Component {
 
     // 刷新
     requestAnimationFrame(this.update.bind(this));
+
+    return false;
   }
 
   render() {
