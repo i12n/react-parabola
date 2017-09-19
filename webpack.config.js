@@ -8,7 +8,7 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './example/main.js',
   ],
-  output: { path: path.join(__dirname, 'example'), filename: 'bundle.js' },
+	output: { path: path.join(__dirname, './'), filename: 'bundle.js' },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: 'example',

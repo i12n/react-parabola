@@ -1,47 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import Parabola from '../src/index';
+import { showParabola } from './../src/index';
 import './style.less';
-
-const nil = () => {};
-
-function showParabola(config) {
-  const props = {
-    ...config,
-  };
-
-  const div = document.createElement('div');
-  document.body.appendChild(div);
-
-  function remove() {
-    const unmountResult = ReactDOM.unmountComponentAtNode(div);
-    if (unmountResult && div.parentNode) {
-      div.parentNode.removeChild(div);
-    }
-  }
-
-  const {
-    duration, rate, top,
-    start, end, children, delay,
-    onAfterEnd = nil, onBeforeStart = nil,
-  } = props;
-
-  ReactDOM.render(
-    <Parabola
-      duration={duration}
-      rate={rate}
-      delay={delay}
-      top={top}
-      start={start}
-      end={end}
-      onBeforeStart={() => onBeforeStart()}
-      onEnd={() => remove()}
-      onAfterEnd={() => onAfterEnd()}
-    >
-      { children }
-    </Parabola>
-  , div);
-}
 
 export default class App extends Component {
   constructor(props) {
@@ -70,8 +29,8 @@ export default class App extends Component {
       height: 30,
     };
     const end = {
-      x: window.scrollX + eX + 10,
-      y: window.scrollY + eY - 10,
+      x: (window.scrollX + eX) + 10,
+      y: (window.scrollY + eY) - 10,
       width: 15,
       height: 15,
     };
