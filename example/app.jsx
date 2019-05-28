@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { showParabola } from './../src/index';
+import { showParabola } from '../src/index';
 import './style.less';
 
 export default class App extends Component {
@@ -47,7 +47,9 @@ export default class App extends Component {
       }, 1000);
     };
 
-    this.config = { ...this.config, start, end, children, onAfterEnd };
+    this.config = {
+      ...this.config, start, end, children, onAfterEnd,
+    };
     showParabola(this.config);
   }
 
@@ -67,6 +69,7 @@ export default class App extends Component {
             items.map(i => (
               <div
                 key={i}
+                onKeyPress={() => {}}
                 role="button"
                 tabIndex="0"
                 className="sale-item"

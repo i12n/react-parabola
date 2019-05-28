@@ -4,7 +4,7 @@ import Parabola from './components/index';
 
 const nil = () => {};
 
-function showParabola(config) {
+export function showParabola(config) {
   const props = {
     ...config,
   };
@@ -38,11 +38,12 @@ function showParabola(config) {
       onAfterEnd={() => onAfterEnd()}
     >
       { children }
-    </Parabola>
-  , div);
+    </Parabola>,
+    div,
+  );
 }
 
-module.exports = {
+export default {
   showParabola,
   Parabola,
 };

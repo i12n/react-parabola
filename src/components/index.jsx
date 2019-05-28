@@ -33,14 +33,14 @@ export default class Parabola extends Component {
     start: PropTypes.shape({
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequire,
-      height: PropTypes.number.isRequire,
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
     }).isRequired,
     end: PropTypes.shape({
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequire,
-      height: PropTypes.number.isRequire,
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
     }).isRequired,
     duration: PropTypes.number,
     top: PropTypes.number,
@@ -93,25 +93,31 @@ export default class Parabola extends Component {
   }
 
   draw() {
+    const { delay } = this.props;
     setTimeout(() => {
       this.update();
       this.startTime = new Date();
-    }, this.props.delay);
+    }, delay);
   }
+
   finish() {
-    if (this.props.onEnd) {
-      this.props.onEnd();
+    const { onEnd } = this.props;
+    if (onEnd) {
+      onEnd();
     }
   }
+
   beforeStart() {
-    if (this.props.onBeforeStart) {
-      this.props.onBeforeStart();
+    const { onBeforeStart } = this.props;
+    if (onBeforeStart) {
+      onBeforeStart();
     }
   }
 
   afterEnd() {
-    if (this.props.onAfterEnd) {
-      this.props.onAfterEnd();
+    const { onAfterEnd } = this.props;
+    if (onAfterEnd) {
+      onAfterEnd();
     }
   }
 
@@ -119,7 +125,9 @@ export default class Parabola extends Component {
    * 坐标系统转换，将全局坐标系转换为相对坐标系
    */
   initParabolas() {
-    const { rate, top, start, end } = this.props;
+    const {
+      rate, top, start, end,
+    } = this.props;
     const left = { // 起点
       x: 0,
       y: 0,
@@ -141,7 +149,9 @@ export default class Parabola extends Component {
   }
 
   update() {
-    const { duration, rate, start, end } = this.props;
+    const {
+      duration, rate, start, end,
+    } = this.props;
     let { animationEnd } = this.state;
     let interval = Date.now() - this.startTime;
 
@@ -181,7 +191,9 @@ export default class Parabola extends Component {
   }
 
   render() {
-    const { translateX, translateY, scaleX, scaleY } = this.state;
+    const {
+      translateX, translateY, scaleX, scaleY,
+    } = this.state;
     const { start, children } = this.props;
     return (
       <div
@@ -200,4 +212,3 @@ export default class Parabola extends Component {
     );
   }
 }
-
