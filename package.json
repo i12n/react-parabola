@@ -1,6 +1,6 @@
 {
   "name": "react-parabola",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Parabolic motion of an object",
   "main": "./lib/index.js",
   "keywords": [
